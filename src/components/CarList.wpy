@@ -1,0 +1,132 @@
+<style lang="less">
+@import '../styles/modules/carlist';
+</style>
+
+<template>
+    <view class="my-car">
+        <view>
+            <block wx:for="{{car}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+                <block>
+                    <block wx:if="{{item.status_code!=='closed'}}">
+                        <view class="car-list">
+                            <view @tap="goDetail({{item.url}})" class="car-info">
+                                <view class="weui-form-preview__bd">
+                                    <view class="weui-form-preview__item">
+                                        <block>
+                                            <block wx:if="{{listObj.type==='quote'}}">
+                                                <view class="weui-form-preview__value car-time {{listObj.statu==='wait'?'car_time_red':''}} {{isQuote?'is-quote':''}}">截至 {{item.auctionTime}}</view>
+                                            </block>
+                                        </block>
+                                    </view>
+                                </view>
+                                <view class="car-list-content">
+                                    <view class="weui-flex">
+                                        <view>
+                                            <block>
+                                                <block wx:if="{{listObj.statu!=='wait'}}">
+                                                    <view class="car-status">{{item.status_name}}</view>
+                                                </block>
+                                            </block>
+                                            <image class="car-image" src="{{item.image+imgSuffix}}"></image>
+                                        </view>
+                                        <view>
+                                            <view class="my-car-body-title">{{item.car_model_name}}</view>
+                                            <view class="weui-media-box__desc my-car-body-desc">{{item.desc}}</view>
+                                        </view>
+                                    </view>
+                                </view>
+                                <block>
+                                    <block wx:if="{{item.priceTxt}}">
+                                        <text class="my-car-price {{priceClass}}">{{item.priceTxt}}</text>
+                                    </block>
+                                </block>
+                            </view>
+                        </view>
+                    </block>
+                </block>
+            </block>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import func from '@/common/func'
+
+    export default class CarList extends wepy.component {
+        props = {
+            car: Array,
+            listObj: {
+                type: Object,
+                default: {
+                    type: "quote",
+                    statu: "wait"
+                }
+            },
+            isQuote: {
+                type: Boolean,
+                default: false
+            },
+            showPrice: Boolean,
+            from: {
+                type: String,
+                default: ""
+            }
+        }
+        watch = {
+            car() {
+                let self = this
+                this.car.forEach((item, res) => {
+                    self.getUrl(item);
+                    self.auctionTime(item);
+                    self.desc(item);
+                    self.priceTxt(item);
+                    self.isToday(item);
+                });
+            }
+        }
+
+        data = {
+            imgSuffix: "?x-oss-process=image/resize,m_fixed,h_150,w_200"
+        }
+
+        methods = {
+            goDetail(path, event) {
+                wepy.navigateTo({url: path});
+            }
+        }
+
+        getUrl(car) {
+            if (this.listObj.type === "quote") {
+                if (this.listObj.statu === "wait") {
+                    car.url = "/pages/quote/quoteDetail?car_type=" + (car.car_type || "") + "&quote_id=" + car.id + "&quote_statu=wait";
+                }
+            }
+        }
+
+        auctionTime(car) {
+            if (this.listObj.type === "quote") {
+                car.auctionTime = func.getQuoteDate(car.finished_at).date;
+            }
+        }
+
+        desc(car) {
+            car.desc = car.located_city.replace(/市/g, "").replace(/辖区/g, "") + " | " + car.license_issued_year + "年 | " + car.mileage + "公里";
+        }
+
+        priceTxt(car) {
+            if (this.listObj.type === "quote") {
+                if (this.listObj.statu === "end") {
+                    car.priceTxt = car.with_me_quote ? (car.with_me_quote.price / 1e6).toFixed(2) + "万" : "";
+                } else {
+                    car.priceTxt = ""
+                }
+                return car.priceTxt;
+            }
+        }
+
+        isToday(car) {
+            return false
+        }
+    }
+</script>

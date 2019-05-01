@@ -1,0 +1,57 @@
+<template>
+<block>
+    <block wx:if="{{type!==undefined}}">
+        <image class="micon" src="../../components/micon/icons/{{type?type:'pic_icon'}}.png" style="{{styleStr}}"></image>
+    </block>
+</block>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Micon extends wepy.component {
+        data = {
+            style: {},
+            styleStr: ""
+        }
+
+        props = {
+            otherStyle: {
+                type: Object,
+                default: {}
+            },
+            type: {
+                type: String,
+                default: ""
+            },
+            size: {
+                type: String,
+                default: "2"
+            },
+            height: {
+                type: String,
+                default: ""
+            },
+            width: {
+                type: String,
+                default: ""
+            }
+        }
+
+        async onLoad() {
+            this.imgSize = this.size || 50;
+            this.style = {
+                height: (this.height || this.imgSize) + "rpx",
+                width: (this.width || this.imgSize) + "rpx"
+            };
+            if (this.otherStyle) {
+                this.styleStr = Object.assign(this.styleStr, this.otherStyle);
+            }
+            for (var item in this.style) {
+                this.styleStr += item + ":" + this.style[item] + ";";
+            }
+            this.$apply();
+        }
+    }
+</script>
+

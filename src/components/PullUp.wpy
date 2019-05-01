@@ -1,0 +1,45 @@
+<style lang="less">
+.loadmore-wrap .weui-loadmore_line {
+    padding-bottom: 3.4em;
+}
+</style>
+
+<template>
+  <view class="loadmore-wrap">
+    <view class="weui-footer">
+      <block>
+        <block wx:if="{{isNoMore}}">
+          <view class="weui-loadmore weui-loadmore_line">
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无更多数据</view>
+          </view>
+        </block>
+      </block>
+      <block>
+        <block wx:if="{{isLoading}}">
+          <view class="weui-loadmore">
+            <view class="weui-loading"></view>
+            <view class="weui-loadmore__tips">正在加载</view>
+          </view>
+        </block>
+      </block>
+    </view>
+  </view> 
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class PullUp extends wepy.component {
+    props = {
+      isLoading: {
+        type: Boolean,
+        default: false
+      },
+      isNoMore: {
+        type: Boolean,
+        default: false
+      }
+    }
+  }
+
+</script>

@@ -1,0 +1,36 @@
+<style lang="less">
+page {
+    height: 100%;
+}
+
+.weui-cells {
+    line-height: 40rpx;
+}
+
+.weui-cells:after,.weui-cells:before {
+    border: 0;
+}
+</style>
+
+<template>
+<view class="weui-cells__title" style="{{hasTitle?'':'display:none;'}}">
+    {{title}}
+</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class CellGroup extends wepy.component {
+        props = {
+            title: {
+                type: String,
+                default: ""
+            }
+        }
+
+        onLoad() {
+            this.hasTitle = (this.title !== null);
+        }
+    }
+</script>

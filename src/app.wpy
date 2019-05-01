@@ -1,0 +1,101 @@
+<style lang="scss" src="./styles/zent.scss"></style>
+<style lang="scss" src="./styles/base.scss"></style>
+
+<style lang="scss">
+  @import "./styles/weui";
+  @import "./styles/weui-extend";
+</style>
+<style lang="less">
+@import './styles/weui/weui.less';
+page {
+    font-size: 16px;
+    font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+}
+page:after {
+    content:"";
+    position:fixed;
+    top:0;
+    width:750rpx;
+    height:1px;
+    background:#e7e7e9;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+import '@/rest/index'
+import {checkAccessToken} from '@/common/session'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/quote/index',
+      'pages/lauch/lauch',
+      'pages/my/my'
+    ],
+    window: {
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '锋驰车市',
+      navigationBarTextStyle: 'black',
+      onReachBottomDistance: 0
+    },
+    tabBar: {
+      color: "#9d9d9c",
+      selectedColor: "#ce3b28",
+      backgroundColor: "#fff",
+      list: [
+        {
+            text: "报价",
+            pagePath: "pages/quote/index",
+            iconPath: "assets/images/m_car.png",
+            selectedIconPath: "assets/images/m_car_active.png"
+        },
+        {
+            text: "发布",
+            pagePath: "pages/lauch/lauch",
+            iconPath: "assets/images/m_lauch.png",
+            selectedIconPath: "assets/images/m_lauch_active.png"
+        },
+        {
+            text: "我的",
+            pagePath: "pages/my/my",
+            iconPath: "assets/images/m_my.png",
+            selectedIconPath: "assets/images/m_my_active.png"
+        }
+      ]
+    }
+  }
+
+  globalData = {
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+    this.intercept('request', {
+      config(config) {
+            return config;
+        },
+        success(res) {
+            return checkAccessToken(res, this);
+        },
+        complete(res) {
+            return res;
+        }
+    })
+    this.intercept('uploadFile', {
+      success(p) {
+        return p.data
+      }
+    })
+  }
+
+  onLaunch() {
+
+  }
+}
+</script>

@@ -1,0 +1,168 @@
+<style lang="less">
+@import '../styles/base/fn';
+.login-wrap button[disabled][type="default"],.login-wrap button[disabled]:not([type]) {
+    color: #ce3b28;
+    background-color: #fff;
+}
+
+.login-wrap button:after {
+    border: 0;
+}
+
+.text-center {
+    font-size: 40rpx;
+    padding: 70rpx 0;
+    text-align: center;
+}
+
+.text-center>.text {
+    display: block;
+}
+
+.btn-submit {
+    padding: 50rpx 32rpx;
+}
+
+.btn-submit .weui_btn_warn {
+    background-color: #ce3b28;
+    border-radius: 16rpx;
+}
+
+.alert .alert-text {
+    font-size: 30rpx;
+    text-align: center;
+}
+
+.alert .weui_btn_dialog.primary {
+    color: #ce3b28;
+}
+</style>
+
+<template>
+<view class="login-wrap">
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell">
+      <view class="weui-cell__hd">
+        <view class="weui-label">手机号</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" placeholder="您的手机号码" type="number" value="{{phone}}" @input="phoneInputHandle"/>
+      </view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__hd">
+        <view class="weui-label">密码</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" placeholder="请输入密码" type="password" value="{{passWords}}" @input="codeInputHanle"/>
+      </view>
+    </view>
+  </view>
+  <view class="btn-submit">
+    <button class="weui-btn" type="warn" disabled="{{!isSubmit}}" @tap="submitCode">{{sumitBtnText}}</button>
+  </view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class LoginPage extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+
+    data = {
+      phone: '', // 手机号
+      passWords: '', // 密码
+      sumitBtnText: '提交',
+      isSubmit: false
+    }
+
+    async onLoad () {
+      try {
+        let acT = wepy.getStorageSync('access_token');
+        if (acT != null) {
+          let result = await this.$rest.auth.checkToken();
+          if (result.code == 0) {
+            this.$switch('quote/index');
+            return
+          }
+        } 
+          wepy.login().then(loginRes => {
+            return loginRes.code
+          })
+          .then(code => {
+            // 设置access_token
+            this.$rest.auth.getToken({'code': code}).then(res => {
+              if (res.code === 0) {
+                wx.setStorage({
+                  key: 'access_token',
+                  data: res.data.access_token
+                })
+              } else {
+                wepy.showModal({
+                  content: res.message || '获取token失败',
+                  showCancel: false,
+                  confirmColor: '#ce3b28'
+                })
+              }
+            })
+          })
+      } catch (e) {
+        console.log("get access token failed.");
+      }
+    }
+
+    onShow() {
+
+    }
+
+    watch = {
+      passWords (val) {
+        this.isSubmit = (val.length >= 8 && this.phone.length === 11)
+      },
+      phone (val) {
+        this.isSubmit = (val.length === 11 && this.passWords.length >= 8)
+      }
+    }
+
+    methods = {
+      phoneInputHandle (e) {
+        this.phone = e.detail.value
+      },
+      codeInputHanle (e) {
+        this.passWords = e.detail.value
+      }
+    }
+
+    submitCode() {
+      this.sumitBtnText = '验证中...'
+      this.isSubmit = false
+      // 发起用户信息提交的操作
+      let params = {
+        mobile_number: this.phone, // 手机号
+        password: this.passWords, // 密码
+      }
+      let self = this
+      this.$rest.auth.postUser(params).then(res => {
+        self.sumitBtnText = '提交'
+        if (res.code === 0) {
+            wepy.switchTab({
+              url: '/pages/quote/index' // 报价
+            })
+        } else {
+          let message = res.data.error_msg ? res.data.error_msg : res.data.message
+          // 验证错误
+          wepy.showModal({
+            content: message,
+            showCancel: false,
+            confirmColor: '#ce3b28'
+          })
+          self.passWords = ''
+        }
+        self.$apply()
+      })
+    }
+  }
+</script>

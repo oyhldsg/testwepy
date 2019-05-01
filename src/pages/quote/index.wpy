@@ -1,0 +1,160 @@
+<template>
+<view>
+    <carlist
+        :car.sync="cars"
+        :listObj.sync="listObj"
+        :showPrice.sync="isShowPrice"
+        :isQuote.once="isQuote"
+    >
+    </carlist>
+    <block>
+        <block wx:if="{{cars.length===0}}">
+            <view class="none-info">
+                <micon></micon>
+                <block>
+                    <view>
+                        <view class="title">暂无车辆资源</view>
+                    </view>
+                </block>
+            </view>
+        </block>
+    </block>
+    <pullup
+        :isNoMore.sync="isNoMore"
+        :isLoading.sync="isLoading"
+    >
+    </pullup>
+</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import CarList from '@/components/CarList'
+    import micon from '@/components/micon/micon'
+    import PullUp from '@/components/PullUp'
+    import pullUpMixin from '@/mixins/pullUpMixin'
+    import pullDownMixin from '@/mixins/pullDownMixin'
+
+    export default class QuoteIndex extends wepy.page {
+        config = {
+            navigationBarTitleText: "报价",
+            enablePullDownRefresh: true
+        }
+
+        data = {
+            cars: [],
+            listObj: {
+                type: "quote",
+                statu: "wait"
+            },
+            activeStatu: "",
+            isShowPrice: false,
+            isQuote: true
+        }
+
+        props = {
+            micon: {
+                type: "none_quote",
+                width: "89",
+                height: "74"
+            }
+        }
+
+        components = {
+            carlist: CarList,
+            micon: micon,
+            pullup: PullUp,
+        }
+
+        computed = {
+        }
+
+        mixins = [pullUpMixin, pullDownMixin]
+
+        methods = {
+        }
+
+        onShareAppMessage() {
+            return {
+                title: "全部车源源自经销商",
+                path: "/pages/quote/index",
+                imageUrl: "../../assets/images/share_bg.jpg"
+            };
+        }
+
+        onPullDownRefresh() {
+            let self = this
+            this.updatePage(async () => {
+                await self.getFirstPage();
+                wepy.stopPullDownRefresh();
+            });
+        }
+
+        onReachBottom() {
+            let self = this
+            this.getListData("cars", async () => {
+                self.$apply();
+                let quotelist = await self.getQuoteList();
+                if (quotelist) {
+                    self.moreAssign(quotelist);
+                }
+                self.isLoading = false;
+                self.$apply();
+            });
+        }
+
+        async onLoad() {
+        }
+
+        async onShow() {
+            this.resetPullUpData();
+            this.$apply();
+            await this.getFirstPage();
+            this.$apply();
+        }
+
+        async getFirstPage() {
+            this.page = 1;
+            this.activeStatu = "wait";
+            this.listObj.statu = this.activeStatu;
+            let quotelist = await this.getQuoteList();
+            if (quotelist) {
+                this.firstAssign(quotelist);
+                this.$apply();
+            }
+        }
+
+        getQuoteList() {
+            let quote = {
+                page: this.page,
+                count: this.count,
+                status: ("wait" === this.activeStatu ? 1 : 2)
+            };
+            this.$rest.quote.getQuoteList(quote).then((res) => {
+                if (res.code === 0) {
+                    return res.data;
+                }
+                wepy.showModal({
+                    content: res.message,
+                    confirmColor: "#ce3b28"
+                });
+            });
+        }
+
+        firstAssign(obj) {
+            if (obj) {
+                this.total_count = obj.total_count;
+                this.cars = obj.enquiries;
+                this.isNoMore = (this.cars.length === this.total_count && this.total_count > this.count);
+            }
+        }
+
+        moreAssign(obj) {
+            if (obj) {
+                this.total_count = obj.total_count;
+                this.cars = this.cars.concat(obj.enquiries);
+                this.isNoMore = this.cars.length === this.total_count;
+            }
+        }
+    }
+</script>

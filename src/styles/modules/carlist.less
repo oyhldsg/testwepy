@@ -1,0 +1,288 @@
+@import '../base/fn';
+.my-car .weui-form-preview__item {
+    display: flex;
+    align-items: center;
+}
+
+.my-car .weui-form-preview__value {
+    flex: 1;
+}
+
+.my-car .weui-form-preview__label-image {
+    width: 100rpx;
+    height: 100rpx;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.tab-car-wrap {
+    padding-bottom: 108rpx;
+}
+
+.tab-car-list {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    background: #fff;
+    height: 88rpx;
+    font-size: 30rpx;
+    border-style: solid;
+    border-width: 1px 0 1px 0;
+    border-color: #e7e7e9;
+    z-index: 999;
+}
+
+.tab-car-list .tab-car-item {
+    -webkit-box-flex: 1;
+    line-height: 1.17333rem;
+    flex: 1;
+    overflow: hidden;
+    text-align: center;
+}
+
+.tab-car-list .tab-car-item .link {
+    color: #000;
+    padding: 0 .26667rem;
+    line-height: 88rpx;
+    display: inline-block;
+    position: relative;
+}
+
+.tab-car-list .tab-car-item.on .link:before {
+    position: absolute;
+    content: "";
+    width: 30rpx;
+    left: 50%;
+    bottom: 0;
+    height: 6rpx;
+    margin-left: -15rpx;
+    background: #ce3b28;
+}
+
+.my-car {
+    padding: 0 30rpx;
+}
+
+.my-car .car-list {
+    margin-top: 20rpx;
+    -ms-box-shadows: -30rpx -12rpx 30rpx #eff2f7,30rpx 12rpx 30rpx #eff2f7,-30rpx 12rpx 30rpx #eff2f7,30rpx -12rpx 30rpx #eff2f7;
+    box-shadow: -30rpx -12rpx 30rpx #eff2f7,30rpx 12rpx 30rpx #eff2f7,-30rpx 12rpx 30rpx #eff2f7,30rpx -12rpx 30rpx #eff2f7;
+    border-radius: 16rpx;
+    border: 0;
+    line-height: initial;
+    background: #fff;
+}
+
+.my-car .car-list .car-store-name {
+    margin-right: 0;
+    font-size: 26rpx;
+    color: #000;
+}
+
+.my-car .car-list .is-quote {
+    text-align: left;
+}
+
+.my-car .car-list .car-time {
+    font-size: 26rpx;
+}
+
+.my-car .car-list .car_time_red {
+    color: #c92323;
+}
+
+.my-car .car-list .my-car-body-title {
+    font-size: 30rpx;
+    color: #0b0b0b;
+    line-height: 1.2;
+}
+
+.my-car .car-list .my-car-body-desc {
+    font-size: 26rpx;
+    color: #8a8a8a;
+}
+
+.my-car .car-list .my-car-price {
+    position: absolute;
+    right: -10rpx;
+    bottom: 15rpx;
+    border-radius: 0;
+    height: 42rpx;
+    line-height: 42rpx;
+    font-size: 26rpx;
+    padding: 0 40rpx 0 18rpx;
+}
+
+.my-car .car-list .my-car-price.price-all {
+    background: #fff;
+    color: #ce3b28;
+    border-top: 1rpx solid #ce3b28;
+    border-left: 1rpx solid #ce3b28;
+    border-bottom: 1rpx solid #ce3b28;
+}
+
+.my-car .car-list .my-car-price.price-all:before {
+    top: -7rpx;
+}
+
+.my-car .car-list .my-car-price.price-bid-succ {
+    background: #ce3b28;
+    color: #fff;
+}
+
+.my-car .car-list .my-car-price.price-bid-succ:before {
+    border-bottom: 6rpx solid #ce3b28;
+}
+
+.my-car .car-list .my-car-price.price-match {
+    background-color: #ffeee8;
+    color: #ce3b28;
+    border: 1px solid #ce3b28;
+}
+
+.my-car .car-list .my-car-price.price-match:before {
+    border-bottom: 4rpx solid #ce3b28;
+}
+
+.my-car .car-list .my-car-price.price-bid-fail {
+    background: #a7a7b1;
+    color: #fff;
+}
+
+.my-car .car-list .my-car-price.price-bid-fail:before {
+    border-bottom: 6rpx solid #a7a7b1;
+}
+
+.my-car .car-list .my-car-price.price-quote-end {
+    color: #c92323;
+}
+
+.my-car .car-list .my-car-price.price-quote-end:before {
+    border: 0;
+}
+
+.my-car .car-list .my-car-price:before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    right: 0;
+    top: -5rpx;
+    border-bottom: 6rpx solid #87281d;
+    border-right: 10rpx solid transparent;
+}
+
+.my-car .car-list .my-car-price:after {
+    display: none;
+}
+
+.my-car .car-list .is-today {
+    color: #ce3b28;
+}
+
+.my-car .car-info {
+    position: relative;
+}
+
+.my-car .car-info:active {
+    background-color: #ededed;
+}
+
+.my-car .my-car-bought {
+    padding: 15rpx 30rpx;
+    overflow: hidden;
+    text-align: right;
+    border-top: 2rpx solid #e7e7e9;
+}
+
+.my-car .my-car-bought .order-btn {
+    display: inline-block;
+    margin-left: 20rpx;
+    width: 180rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    border: 2rpx solid #8a8a8a;
+    border-radius: 30rpx;
+    font-size: 30rpx;
+    color: #8a8a8a;
+    text-align: center;
+}
+
+.my-car .my-car-bought .accept-btn {
+    border: 2rpx solid #ce3b28;
+    color: #ce3b28;
+}
+
+.my-car .car-list-content {
+    padding: 0 15px 10px;
+}
+
+.my-car .car-list-content .car-status {
+    position: absolute;
+    left: 44rpx;
+    font-size: 18rpx;
+    padding: 4rpx 12rpx;
+    color: #fff;
+    background-color: #6682ba;
+    border-bottom-left-radius: 8rpx;
+    border-bottom-right-radius: 8rpx;
+}
+
+.my-car .car-list-content .car-image {
+    margin-right: 30rpx;
+    width: 200rpx;
+    height: 133rpx;
+}
+
+.none-info {
+    text-align: center;
+    padding-top: 160rpx;
+    color: #9a9a9a;
+    font-size: 32rpx;
+}
+
+.none-info .title {
+    font-size: 40rpx;
+}
+
+.none-info .intro {
+    margin-top: 20rpx;
+    font-size: 26rpx;
+}
+
+.none-info .auction-btn {
+    margin: 0 auto;
+    margin-top: 55rpx;
+    width: 356rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    border-radius: 12rpx;
+    font-size: 30rpx;
+    color: #d24d3c;
+    border-width: 2rpx;
+    border-style: solid;
+    border-color: #d24d3c;
+}
+
+.buyCar-icon,.offer-priceCar-icon {
+    margin: 0 auto;
+    margin-bottom: 10rpx;
+}
+
+.buyCar-icon {
+    width: 122rpx;
+    height: 103rpx;
+}
+
+.offer-priceCar-icon {
+    width: 81rpx;
+    height: 82rpx;
+}
